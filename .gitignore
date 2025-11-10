@@ -3,39 +3,71 @@
 # dependencies
 node_modules/
 
-# Expo
+# -------------------------------------------------------------
+# Expo / React Native build outputs
+# -------------------------------------------------------------
 .expo/
+.expo-shared/
 dist/
 web-build/
 expo-env.d.ts
+.metro-health-check*
+.cache/
+coverage/
+tmp/
+temp/
 
-# Native
+# -------------------------------------------------------------
+# Native platforms (generated/build artifacts)
+# If you add native code later, remove the platform you need.
+# -------------------------------------------------------------
+/ios
+/android
 .kotlin/
+Pods/
 *.orig.*
 *.jks
+*.keystore
 *.p8
 *.p12
 *.key
+*.pem
+*.cer
+*.crt
+*.der
 *.mobileprovision
+*.ipa
+*.apk
+*.aab
 
-# Metro
-.metro-health-check*
+# -------------------------------------------------------------
+# Environment files (keep secrets out of git)
+# -------------------------------------------------------------
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env*.local
 
-# debug
+# -------------------------------------------------------------
+# Logs
+# -------------------------------------------------------------
 npm-debug.*
 yarn-debug.*
 yarn-error.*
+pnpm-debug.log*
+*.log
 
-# macOS
+# -------------------------------------------------------------
+# Editors / OS
+# -------------------------------------------------------------
 .DS_Store
-*.pem
+.idea/
+.vscode/
+*.iml
 
-# local env files
-.env*.local
-
-# typescript
+# -------------------------------------------------------------
+# TypeScript
+# -------------------------------------------------------------
 *.tsbuildinfo
-
-# generated native folders
-/ios
-/android

@@ -1,13 +1,11 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import AiHomeScreen from './src/screen/ai/AiHomeScreen';
 
 export default function App() {
   return (
     <SafeAreaProvider>
-        <NavigationContainer>
-          <></>
-        </NavigationContainer>
+        <AiHomeScreen />
     </SafeAreaProvider>
   );
 }
