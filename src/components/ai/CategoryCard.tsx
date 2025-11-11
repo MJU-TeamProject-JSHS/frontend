@@ -1,21 +1,30 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 type Props = {
   title: string;
   colors: [string, string];
   Icon: React.ComponentType<{ size?: number; color?: string; opacity?: number }>;
+  onPress?: () => void;
 };
 
-export default function CategoryCard({ title, colors, Icon }: Props) {
+export default function CategoryCard({ title, colors, Icon, onPress }: Props) {
   return (
-    <LinearGradient colors={colors} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.card}>
-      <View style={styles.iconGlass}>
-        <Icon size={36} color="#FFFFFF" opacity={0.95} />
+    <Pressable onPress={onPress} style={({ pressed }) => [styles.card, { opacity: pressed ? 0.95 : 1 }]}>
+      <LinearGradient
+        colors={colors}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={StyleSheet.absoluteFillObject as any}
+      />
+      <View style={styles.content}>
+        <View style={styles.iconGlass}>
+          <Icon size={36} color="#FFFFFF" opacity={0.95} />
+        </View>
+        <Text style={styles.title}>{title}</Text>
       </View>
-      <Text style={styles.title}>{title}</Text>
-    </LinearGradient>
+    </Pressable>
   );
 }
 
@@ -24,14 +33,18 @@ const styles = StyleSheet.create({
     width: '48%',
     height: 190,
     borderRadius: 20,
-    padding: 16,
-    justifyContent: 'space-between',
+    overflow: 'hidden',
     marginBottom: 16,
     shadowColor: '#000',
     shadowOpacity: 0.15,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 6 },
     elevation: 3,
+  },
+  content: {
+    flex: 1,
+    padding: 16,
+    justifyContent: 'space-between',
   },
   iconGlass: {
     alignSelf: 'center',

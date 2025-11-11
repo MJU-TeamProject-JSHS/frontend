@@ -3,10 +3,10 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 
-import RobotFigmaIcon from '../assets/svgs/RobotFigmaIcon';
-import ClipboardListMdIcon from '../assets/svgs/ClipboardListMdIcon';
-import FolderOpenMdIcon from '../assets/svgs/FolderOpenMdIcon';
-import UserMdIcon from '../assets/svgs/UserMdIcon';
+import RobotFigmaIcon from '../../assets/svgs/RobotFigmaIcon';
+import ClipboardListMdIcon from '../../assets/svgs/ClipboardListMdIcon';
+import FolderOpenMdIcon from '../../assets/svgs/FolderOpenMdIcon';
+import UserMdIcon from '../../assets/svgs/UserMdIcon';
 
 export type TabKey = 'ai' | 'board' | 'library' | 'my';
 

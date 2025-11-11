@@ -12,5 +12,15 @@ declare module 'expo-linear-gradient' {
 
   export const LinearGradient: React.ComponentType<LinearGradientProps>;
 }
+ 
+declare module 'expo-document-picker' {
+  export type DocumentPickerAsset = { name: string; uri: string; mimeType?: string; size?: number };
+  export type DocumentPickerResult = { canceled: boolean; assets?: DocumentPickerAsset[] } & any;
+  export function getDocumentAsync(options?: {
+    type?: string | string[];
+    multiple?: boolean;
+    copyToCacheDirectory?: boolean;
+  }): Promise<DocumentPickerResult>;
+}
 
 

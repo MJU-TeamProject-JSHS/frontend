@@ -1,21 +1,18 @@
 import React from 'react';
-import { TextProps } from 'react-native';
 import Svg, { Defs, LinearGradient as SvgGradient, Stop, Text as SvgText } from 'react-native-svg';
 
-type Props = TextProps & {
-  colors: string[];
-};
-
-export default function GradientText({ colors, style, children, ...rest }: Props) {
-  const text = String(children ?? '');
-  // 기본 폰트 사이즈/라인하이트 추출
-  const fontSize = (style as any)?.fontSize ?? 24;
-  const lineHeight = (style as any)?.lineHeight ?? fontSize * 1.5;
-  const fontWeight = (style as any)?.fontWeight ?? '700';
-  const fontFamily = (style as any)?.fontFamily;
+// 고정 크기의 DDiNG 로고 컴포넌트 (단일 컴포넌트)
+export default function DDingLogo() {
+  const text = 'DDiNG';
+  const fontSize = 28;
+  const lineHeight = 42;
+  const fontWeight = '900';
+  const fontFamily = 'Inter';
+  const width = 100; // 충분한 여유 폭으로 고정
+  const colors = ['#4f46e5', '#9333ea'];
 
   return (
-    <Svg height={lineHeight} /* width auto - let layout engine size container */>
+    <Svg height={lineHeight} width={width}>
       <Defs>
         <SvgGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
           {colors.map((c, i) => (
@@ -24,7 +21,6 @@ export default function GradientText({ colors, style, children, ...rest }: Props
         </SvgGradient>
       </Defs>
       <SvgText
-        {...(rest as any)}
         fill="url(#grad)"
         fontSize={fontSize}
         fontWeight={fontWeight as any}
