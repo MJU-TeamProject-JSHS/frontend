@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import DDingLogo from '../../components/global/DDingLogo';
@@ -18,7 +18,26 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
   
   const navigation = useNavigation<any>();
   const [files, setFiles] = useState<Array<{ name: string; uri: string }>>([]);
+  const [isUploading, setIsUploading] = useState(false);
 
+  const DUMMY_UPLOAD_URL = 'https://httpbin.org/post';
+
+
+  //파일 형식 추출 함수
+  const getMimeTypeFromName = (name: string) => {
+    const ext = name.split('.').pop()?.toLowerCase();
+    switch (ext) {
+      case 'pdf':
+      return 'application/pdf';
+      case 'txt':
+        return 'text/plain';
+      default:
+        return 'application/octet-stream';
+    }
+  };
+
+  
+  //파일 선택 함수
   const handlePick = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
@@ -41,6 +60,35 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
 
   const handleRemove = (name: string) => {
     setFiles(prev => prev.filter(f => f.name !== name));
+  };
+
+  //백엔드에 파일 넘기는 함수
+  const handleSubmit = async () => {
+    if (files.length === 0 || isUploading) return;
+    try {
+      setIsUploading(true);
+      const formData = new FormData();
+      files.forEach((f) => {
+        const type = getMimeTypeFromName(f.name);
+        formData.append('files', { uri: f.uri, name: f.name, type } as any);
+      });
+      formData.append('title', title);
+
+      const res = await fetch(DUMMY_UPLOAD_URL, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error('Upload failed');
+      }
+      Alert.alert('업로드 완료', '파일이 더미 서버로 전송되었습니다.');
+      setFiles([]);
+    } catch (e) {
+      Alert.alert('업로드 실패', '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -113,12 +161,19 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
 
       {/* 하단 CTA */}
       <View style={styles.ctaWrap}>
-        <LinearGradient colors={['#6366f1', '#a855f7', '#ec4899']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.ctaBtn}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-            <SparklesIcon size={24} color="#FFFFFF" />
-            <Text style={[styles.ctaText, { marginLeft: 8 }]}>문제 생성하기</Text>
-          </View>
-        </LinearGradient>
+        <Pressable onPress={handleSubmit} disabled={isUploading || files.length === 0}>
+          <LinearGradient
+            colors={['#6366f1', '#a855f7', '#ec4899']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={[styles.ctaBtn, (isUploading || files.length === 0) ? { opacity: 0.6 } : undefined]}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+              <SparklesIcon size={24} color="#FFFFFF" />
+              <Text style={[styles.ctaText, { marginLeft: 8 }]}>{isUploading ? '업로드 중...' : '문제 생성하기'}</Text>
+            </View>
+          </LinearGradient>
+        </Pressable>
       </View>
     </SafeAreaView>
   );

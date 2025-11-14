@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import FileTextIcon from '../../assets/svgs/FileTextIcon';
 import XIcon from '../../assets/svgs/XIcon';
+import { LinearGradient } from 'expo-linear-gradient';
 
 type Props = {
   name: string;
@@ -13,9 +14,14 @@ export default function UploadedFileItem({ name, status = '준비완료', onRemo
   return (
     <View style={styles.fileItem}>
       <View style={styles.fileLeft}>
-        <View style={styles.fileIconWrap}>
-          <FileTextIcon size={20} color="#6B7280" />
-        </View>
+        <LinearGradient
+          colors={['#818cf8', '#a78bfa']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.fileIconWrap}
+        >
+          <FileTextIcon size={20} color="#FFFFFF" />
+        </LinearGradient>
         <View>
           <Text style={styles.fileName}>{name}</Text>
           <Text style={styles.fileSub}>{status}</Text>
@@ -52,7 +58,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: '#EEF2FF',
     alignItems: 'center',
     justifyContent: 'center',
   },
