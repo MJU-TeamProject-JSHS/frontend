@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AiHomeScreen from './src/screen/ai/AiHomeScreen';
 import ProblemMakeScreen from './src/screen/ai/ProblemMakeScreen';
 import ProblemLoading from './src/screen/ai/ProblemLoadingScreen';
+import ProblemResultScreen from './src/screen/ai/ProblemResultScreen';
 import BoardDetailScreen from './src/screen/board/BoardDetailScreen';
 
 const Stack = createNativeStackNavigator();
@@ -18,6 +19,7 @@ export default function App() {
           <Stack.Screen name="AiHome" component={AiHomeScreen} />
           <Stack.Screen name="ProblemMake" component={ProblemMakeScreen} />
           <Stack.Screen name="ProblemLoading" component={ProblemLoading} />
+          <Stack.Screen name="ProblemResult" component={ProblemResultScreen} />
           <Stack.Screen name="BoardDetail" component={BoardDetailScreen} />
         </Stack.Navigator>
       </NavigationContainer>

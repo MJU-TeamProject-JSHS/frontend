@@ -5,8 +5,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Circle } from 'react-native-svg';
 import SparklesIcon from '../../assets/svgs/SparklesIcon';
 import DDingLogo from '../../components/global/DDingLogo';
+import { useNavigation } from '@react-navigation/native';
 
-export default function ProblemLoading() {
+type RouteParams = { title?: string };
+
+export default function ProblemLoading({ route }: { route: { params?: RouteParams } }) {
+  const navigation = useNavigation<any>();
+  const title = route?.params?.title ?? '문제 생성하기';
   // 회전
   const rotate = useRef(new Animated.Value(0)).current;
   // 중앙 이중 원 펄스
@@ -103,6 +108,19 @@ export default function ProblemLoading() {
       timeouts.forEach((timeout) => clearTimeout(timeout));
     };
   }, [rotate, outerPulse, innerPulse, iconPulse, bounce1, bounce2, bounce3, progressWidth]);
+
+  // TODO: 나중에 수정이 필요한 부분 - 실제 API 응답을 받은 후에 네비게이션하도록 변경 필요
+  // 5초 후 ProblemResultScreen으로 이동
+  useEffect(() => {
+    const navigationTimer = setTimeout(() => {
+      navigation.navigate('ProblemResult', { title });
+    }, 5000); // 5초 (5000ms)
+
+    // 컴포넌트 언마운트 시 타이머 정리
+    return () => {
+      clearTimeout(navigationTimer);
+    };
+  }, [navigation, title]);
 
   const spin = rotate.interpolate({
     inputRange: [0, 1],

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable, Alert } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import DDingLogo from '../../components/global/DDingLogo';
@@ -22,6 +22,35 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
 
   const DUMMY_UPLOAD_URL = 'https://httpbin.org/post';
 
+  // title에 따라 그라데이션 색상 반환 함수
+  const getGradientColors = (title: string): string[] => {
+    if (title.includes('암기 노트')) {
+      return ['#F43F5E', '#EC4899', '#F472B6']; // rose-500 → pink-500 → pink-400
+    } else if (title.includes('주관식')) {
+      return ['#3B82F6', '#6366F1', '#A855F7']; // blue-500 → indigo-500 → purple-500
+    } else if (title.includes('OX')) {
+      return ['#10B981', '#14B8A6', '#06B6D4']; // emerald-500 → teal-500 → cyan-500
+    } else {
+      // 객관식 문제 (기본값)
+      return ['#6366f1', '#a855f7', '#ec4899']; // indigo-500 → purple-500 → pink-500
+    }
+  };
+
+  const gradientColors = getGradientColors(title);
+
+  // 문제 유형에 따른 전체 화면 배경색 반환 함수
+  const getBackgroundColors = (title: string): string[] => {
+    if (title.includes('암기 노트')) {
+      return ['#F8FAFC', '#FCE7F3', '#FBCFE8']; // slate-50 → pink-100 → pink-200
+    } else if (title.includes('주관식')) {
+      return ['#F8FAFC', '#E0E7FF', '#DBEAFE']; // slate-50 → indigo-100 → blue-100
+    } else if (title.includes('OX')) {
+      return ['#F8FAFC', '#D1FAE5', '#CCFBF1']; // slate-50 → emerald-100 → teal-100
+    }
+    return ['#eef2ff', '#faf5ff', '#fdf2f8']; // 기본값
+  };
+
+  const backgroundColors = getBackgroundColors(title);
 
   //파일 형식 추출 함수
   const getMimeTypeFromName = (name: string) => {
@@ -68,7 +97,7 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
     try {
       setIsUploading(true);
       // 업로드 진행 화면으로 이동
-      navigation.navigate('ProblemLoading');
+      navigation.navigate('ProblemLoading', { title });
       const formData = new FormData();
       files.forEach((f) => {
         const type = getMimeTypeFromName(f.name);
@@ -84,10 +113,10 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
       if (!res.ok) {
         throw new Error('Upload failed');
       }
-      Alert.alert('업로드 완료', '파일이 더미 서버로 전송되었습니다.');
+      console.log('업로드 완료', '파일이 더미 서버로 전송되었습니다.');
       setFiles([]);
     } catch (e) {
-      Alert.alert('업로드 실패', '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      console.log('업로드 실패', '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
     } finally {
       setIsUploading(false);
     }
@@ -97,14 +126,14 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
     //전체 화면에 그라데이션 효과 추가
     <SafeAreaView style={styles.safe}>
       <LinearGradient
-        colors={["#eef2ff", "#faf5ff", "#fdf2f8"]}
+        colors={backgroundColors}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={StyleSheet.absoluteFillObject as any}
       />
       {/* 상단바: 뒤로가기 + DDING 로고 (flex) */}
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()} style={styles.backHit}>
+        <Pressable onPress={() => navigation.navigate('AiHome')} style={styles.backHit}>
           <ChevronLeftIcon size={24} color="#111827" />
         </Pressable>
         <View style={{ marginTop: 6 }}>
@@ -114,7 +143,7 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
       {/* 타이틀 영역 */}
       <View style={styles.container}>
       <LinearGradient
-        colors={["#6366f1", "#a855f7", "#ec4899"]}
+        colors={gradientColors}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.banner}
@@ -135,7 +164,7 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
       <View style={styles.uploadCard}>
         <Pressable onPress={handlePick}>
         <LinearGradient colors={['#eef2ff', '#ffffff']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.uploadInner}>
-          <LinearGradient colors={['#6366f1', '#a855f7', '#ec4899']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.uploadBadge}>
+          <LinearGradient colors={gradientColors} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.uploadBadge}>
             <UploadIcon size={28} color="#FFFFFF" />
           </LinearGradient>
           <Text style={styles.uploadTitle}>파일 업로드하기</Text>
@@ -147,7 +176,13 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
       {/* 업로드된 파일 섹션 */}
       <Text style={styles.sectionTitle}>업로드된 파일 ({files.length})</Text>
       {files.map(f => (
-        <UploadedFileItem key={f.uri} name={f.name} status="준비완료" onRemove={() => handleRemove(f.name)} />
+        <UploadedFileItem 
+          key={f.uri} 
+          name={f.name} 
+          status="준비완료" 
+          onRemove={() => handleRemove(f.name)}
+          gradientColors={gradientColors}
+        />
       ))}
 
       {/* 안내 카드 */}
@@ -165,7 +200,7 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
       <View style={styles.ctaWrap}>
         <Pressable onPress={handleSubmit} disabled={isUploading || files.length === 0}>
           <LinearGradient
-            colors={['#6366f1', '#a855f7', '#ec4899']}
+            colors={gradientColors}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={[styles.ctaBtn, (isUploading || files.length === 0) ? { opacity: 0.6 } : undefined]}
