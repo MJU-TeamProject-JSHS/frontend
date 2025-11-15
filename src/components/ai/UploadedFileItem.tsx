@@ -8,14 +8,15 @@ type Props = {
   name: string;
   status?: string;
   onRemove?: () => void;
+  gradientColors?: string[];
 };
 
-export default function UploadedFileItem({ name, status = '준비완료', onRemove }: Props) {
+export default function UploadedFileItem({ name, status = '준비완료', onRemove, gradientColors = ['#818cf8', '#a78bfa'] }: Props) {
   return (
     <View style={styles.fileItem}>
       <View style={styles.fileLeft}>
         <LinearGradient
-          colors={['#818cf8', '#a78bfa']}
+          colors={gradientColors}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.fileIconWrap}
