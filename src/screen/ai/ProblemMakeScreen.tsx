@@ -67,6 +67,8 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
     if (files.length === 0 || isUploading) return;
     try {
       setIsUploading(true);
+      // 업로드 진행 화면으로 이동
+      navigation.navigate('ProblemLoading');
       const formData = new FormData();
       files.forEach((f) => {
         const type = getMimeTypeFromName(f.name);
@@ -105,7 +107,7 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
         <Pressable onPress={() => navigation.goBack()} style={styles.backHit}>
           <ChevronLeftIcon size={24} color="#111827" />
         </Pressable>
-        <View style={{ marginLeft: 8 }}>
+        <View style={{ marginTop: 6 }}>
           <DDingLogo />
         </View>
       </View>
