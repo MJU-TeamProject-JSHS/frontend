@@ -7,7 +7,9 @@ import {
   Image,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
+import BottomTabBar from '../../components/global/BottomTabBar';
 
 // 테스트용 더미
 type UserProfile = {
@@ -76,7 +78,7 @@ function formatDateShort(iso: string) {
 //임시 스타일
 const S = {
   page: { flex: 1, backgroundColor: '#f9fafb' as const },
-  container: { padding: 16 },
+  container: { padding: 16, flexGrow: 1 },
 
   // 섹션 헤더 (제목 + 전체 보기)
   sectionHeaderRow: {
@@ -179,7 +181,8 @@ export default function MyPageScreen() {
   const posts = MOCK_MY_POSTS;
 
   return (
-    <ScrollView style={S.page} contentContainerStyle={S.container}>
+    <SafeAreaView style={S.page}>
+      <ScrollView style={S.page} contentContainerStyle={[S.container, { paddingBottom: 100 }]}>
       
 
       {/* 프로필 카드 */}
@@ -286,5 +289,7 @@ export default function MyPageScreen() {
         </TouchableOpacity>
       </View>
     </ScrollView>
+      <BottomTabBar selectedKey="my" />
+    </SafeAreaView>
   );
 }

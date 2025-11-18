@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import BottomTabBar, { TabKey } from '../../components/global/BottomTabBar';
+import BottomTabBar from '../../components/global/BottomTabBar';
 import DDingLogo from '../../components/global/DDingLogo';
 import CategoryCard from '../../components/ai/CategoryCard';
 import FileQuestionIcon from '../../assets/svgs/FileQuestionIcon';
@@ -12,7 +12,6 @@ import CheckCircle2Icon from '../../assets/svgs/CheckCircle2Icon';
 import { useNavigation } from '@react-navigation/native';
 
 export default function AiHomeScreen() {
-  const [tab, setTab] = useState<TabKey>('ai');
   const navigation = useNavigation<any>();
 
   return (
@@ -56,7 +55,7 @@ export default function AiHomeScreen() {
           onPress={() => navigation.navigate('ProblemMake', { title: 'OX 문제', type: 'ox' })}
         />
       </View>
-      <BottomTabBar selectedKey={tab} onChange={setTab} />
+      <BottomTabBar selectedKey="ai" />
     </SafeAreaView>
   );
 }
