@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import RobotFigmaIcon from '../../assets/svgs/RobotFigmaIcon';
 import ClipboardListMdIcon from '../../assets/svgs/ClipboardListMdIcon';
@@ -15,9 +15,31 @@ type Props = {
   onChange?: (key: TabKey) => void;
 };
 
+// 탭 키와 화면 이름 매핑
+const TAB_TO_SCREEN: Record<TabKey, string> = {
+  ai: 'AiHome',
+  board: 'BoardList',
+  library: 'ScrapList', // 나중에 구현 예정
+  my: 'MyPageMain',
+};
+
 export default function BottomTabBar({ selectedKey, onChange }: Props) {
   const [internalKey, setInternalKey] = useState<TabKey>('ai');
-  const activeKey = selectedKey ?? internalKey;
+  const navigation = useNavigation<any>();
+  const route = useRoute();
+
+  // 현재 화면 이름에 따라 activeKey 결정
+  const getActiveKeyFromRoute = (): TabKey | null => {
+    const routeName = route.name;
+    for (const [key, screenName] of Object.entries(TAB_TO_SCREEN)) {
+      if (screenName === routeName) {
+        return key as TabKey;
+      }
+    }
+    return null;
+  };
+
+  const activeKey = selectedKey ?? getActiveKeyFromRoute() ?? internalKey;
 
   // 탭 바 아이콘과 라벨 추가
   const tabs = useMemo(
@@ -31,8 +53,18 @@ export default function BottomTabBar({ selectedKey, onChange }: Props) {
   );
 
   const handlePress = (key: TabKey) => {
-    if (onChange) onChange(key);
-    else setInternalKey(key);
+    // onChange가 있으면 호출 (상태 관리용)
+    if (onChange) {
+      onChange(key);
+    } else {
+      setInternalKey(key);
+    }
+
+    // 네비게이션 처리
+    const screenName = TAB_TO_SCREEN[key];
+    if (screenName && route.name !== screenName) {
+      navigation.navigate(screenName as never);
+    }
   };
 
   return (
