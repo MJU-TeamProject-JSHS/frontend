@@ -17,10 +17,24 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
   const title = route?.params?.title ?? '문제 생성하기';
   
   const navigation = useNavigation<any>();
-  const [files, setFiles] = useState<Array<{ name: string; uri: string }>>([]);
+  const [files, setFiles] = useState<Array<{ name: string; uri: string; mimeType?: string }>>([]);
   const [isUploading, setIsUploading] = useState(false);
 
-  const DUMMY_UPLOAD_URL = 'https://httpbin.org/post';
+  const setType = (title: string) => {
+    if (title.includes('암기 노트')) {
+      return 'NOTE';
+    } else if (title.includes('주관식')) {
+      return 'SHORT';
+    } else if (title.includes('OX')) {
+      return 'OX';
+    } else {
+      return 'MCQ';
+    }
+  };
+  const type = setType(title);
+  const DUMMY_UPLOAD_URL = `https://cd00fddab46b.ngrok-free.app/api/genai/questions?type=${type}`;
+
+  
 
   // title에 따라 그라데이션 색상 반환 함수
   const getGradientColors = (title: string): string[] => {
@@ -74,13 +88,18 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
         multiple: true,
         copyToCacheDirectory: true,
       });
-      const picked = (result as any).assets
-        ? (result as any).assets.map((a: any) => ({ name: a.name, uri: a.uri }))
-        : (result as any).type !== 'cancel'
-          ? [{ name: (result as any).name, uri: (result as any).uri }]
-          : [];
-      if (picked.length > 0) {
-        setFiles(prev => [...prev, ...picked]);
+      
+      if ((result as any).type === 'cancel') return;
+      
+      const assets = (result as any).assets || [(result as any)];
+      const newFiles = assets.map((a: any) => ({ 
+        name: a.name, 
+        uri: a.uri,
+        mimeType: a.mimeType 
+      }));
+      
+      if (newFiles.length > 0) {
+        setFiles(prev => [...prev, ...newFiles]);
       }
     } catch (e) {
       // ignore
@@ -98,12 +117,29 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
       setIsUploading(true);
       // 업로드 진행 화면으로 이동
       navigation.navigate('ProblemLoading', { title });
+      
+      // FormData 생성
       const formData = new FormData();
-      files.forEach((f) => {
-        const type = getMimeTypeFromName(f.name);
-        formData.append('files', { uri: f.uri, name: f.name, type } as any);
-      });
-      formData.append('title', title);
+      
+      // 첫 번째 파일을 file1로 append
+      if (files[0]) {
+        const mimeType = files[0].mimeType ?? getMimeTypeFromName(files[0].name);
+        formData.append('file1', {
+          uri: files[0].uri,
+          name: files[0].name ?? 'file1.pdf',
+          type: mimeType,
+        } as any);
+      }
+      
+      // 두 번째 파일이 있으면 file2로 append
+      if (files[1]) {
+        const mimeType = files[1].mimeType ?? getMimeTypeFromName(files[1].name);
+        formData.append('file2', {
+          uri: files[1].uri,
+          name: files[1].name ?? 'file2.pdf',
+          type: mimeType,
+        } as any);
+      }
 
       const res = await fetch(DUMMY_UPLOAD_URL, {
         method: 'POST',
@@ -111,11 +147,17 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
       });
 
       if (!res.ok) {
+        const errorText = await res.text();
+        console.log('Server error:', errorText);
         throw new Error('Upload failed');
       }
-      console.log('업로드 완료', '파일이 더미 서버로 전송되었습니다.');
+      
+      const data = await res.json();
+      console.log('SUCCESS:', data);
+      console.log('업로드 완료', '파일이 서버로 전송되었습니다.');
       setFiles([]);
     } catch (e) {
+      console.error('Network error:', e);
       console.log('업로드 실패', '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
     } finally {
       setIsUploading(false);
