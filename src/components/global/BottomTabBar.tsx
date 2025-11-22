@@ -19,7 +19,7 @@ type Props = {
 const TAB_TO_SCREEN: Record<TabKey, string> = {
   ai: 'AiHome',
   board: 'BoardList',
-  library: 'ScrapList', // 나중에 구현 예정
+  library: 'ScrapList',
   my: 'MyPageMain',
 };
 

@@ -13,6 +13,7 @@ import {
 import { Feather } from '@expo/vector-icons';
 import BottomTabBar, { TabKey } from '../../components/global/BottomTabBar';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 
 type PostItem = {
   id: number;
@@ -29,15 +30,15 @@ type MenuItem = {
 };
 
 const FIXED_PROFILE = {
-  nickname: '임서빈',
+  nickname: '운영자',
 };
 
 const POSTS: PostItem[] = [
-  { id: 1, title: '게시물 1', timeAgo: '2일 전' },
-  { id: 2, title: '게시물 2', timeAgo: '5일 전' },
-  { id: 3, title: '게시물 3', timeAgo: '1주 전' },
-  { id: 4, title: '게시물 4', timeAgo: '2주 전' },
-  { id: 5, title: '게시물 5', timeAgo: '3주 전' },
+  { id: 1, title: '공학수학 5,6주차 과제 손풀이', timeAgo: '2일 전' },
+  { id: 2, title: '4차산업혁명시대의 예술 중간 분할 pdf', timeAgo: '5일 전' },
+  { id: 3, title: '이산수학개론 기말고사 범위 변경', timeAgo: '1주 전' },
+  { id: 4, title: '세계화와 사회변화 정리노트', timeAgo: '2주 전' },
+  { id: 5, title: '성서와 인간이해 교재 다운로드 방법', timeAgo: '3주 전' },
 ];
 
 const GUIDE_CARDS = [
@@ -430,6 +431,16 @@ export default function MyPageMainScreen() {
   const [noticeOpen, setNoticeOpen] = useState(false);
   const [versionOpen, setVersionOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
+  const navigation = useNavigation<any>();
+
+  const handlePostPress = (id: number) => {
+  if (id === 2) {
+    navigation.navigate("MyPostDetail+");
+  }
+  else {
+    navigation.navigate("MyPostDetail", { id });
+  }
+};
 
   const menuItems = useMemo<MenuItem[]>(
     () => [
@@ -515,8 +526,7 @@ export default function MyPageMainScreen() {
             <View style={styles.profileTextArea}>
               <Text style={styles.nickname}>{FIXED_PROFILE.nickname}</Text>
               <TouchableOpacity activeOpacity={0.7} style={styles.profileSettingRow}>
-                <Text style={styles.profileSettingText}>프로필 설정</Text>
-                <Feather name="chevron-right" size={16} color="rgba(255,255,255,0.9)" />
+              
               </TouchableOpacity>
             </View>
           </LinearGradient>
@@ -525,7 +535,7 @@ export default function MyPageMainScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>내가 쓴 글</Text>
-            <TouchableOpacity activeOpacity={0.7} style={styles.sectionMore}>
+            <TouchableOpacity activeOpacity={0.7} style={styles.sectionMore} onPress={() => navigation.navigate('MyPosts')}>
               <Text style={styles.sectionMoreText}>전체보기</Text>
               <Feather name="chevron-right" size={14} color="#615FFF" />
             </TouchableOpacity>
@@ -533,7 +543,7 @@ export default function MyPageMainScreen() {
 
           <View style={styles.postList}>
             {POSTS.map((p) => (
-              <TouchableOpacity key={p.id} activeOpacity={0.8} style={styles.postItem}>
+              <TouchableOpacity key={p.id} activeOpacity={0.8} style={styles.postItem}  onPress={() => handlePostPress(p.id)}>
                 <LinearGradient
                   colors={['#7C86FF', '#C27AFF']}
                   start={{ x: 0, y: 0 }}
