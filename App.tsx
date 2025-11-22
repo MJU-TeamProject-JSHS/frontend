@@ -7,11 +7,13 @@ import AiHomeScreen from './src/screen/ai/AiHomeScreen';
 import ProblemMakeScreen from './src/screen/ai/ProblemMakeScreen';
 import ProblemLoading from './src/screen/ai/ProblemLoadingScreen';
 import ProblemResultScreen from './src/screen/ai/ProblemResultScreen';
+
 import BoardListScreen from './src/screen/board/BoardListScreen';
 import BoardDetailScreen from './src/screen/board/BoardDetailScreen';
 import BoardWriteScreen from './src/screen/board/BoardWriteScreen';
-import MyPageScreen from './src/screen/mypage/MyPageMainScreen';
 
+import MyPageScreen from './src/screen/mypage/MyPageMainScreen';
+import PDFViewerScreen from './src/screen/common/PDFViewerScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,11 +27,12 @@ export default function App() {
           <Stack.Screen name="MyPageMain" component={MyPageScreen} />
           <Stack.Screen name="BoardDetail" component={BoardDetailScreen} />
           <Stack.Screen name="BoardWrite" component={BoardWriteScreen} />
+          <Stack.Screen name="PDFViewer" component={PDFViewerScreen} />
           <Stack.Screen name="ProblemMake" component={ProblemMakeScreen} />
           <Stack.Screen name="ProblemLoading" component={ProblemLoading} />
           <Stack.Screen name="ProblemResult" component={ProblemResultScreen} />
         </Stack.Navigator>
-      </NavigationContainer>  
+      </NavigationContainer>
     </SafeAreaProvider>
   );
 }

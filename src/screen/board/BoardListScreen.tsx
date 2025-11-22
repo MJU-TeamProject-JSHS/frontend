@@ -13,8 +13,8 @@ import EditIcon from '../../assets/svgs/EditIcon';
 const MOCK_POSTS: PostData[] = [
   {
     id: 1,
-    title: '선형대수학3강 워크시트',
-    author: '홍길동',
+    title: '공학수학 5,6주차 과제 손풀이',
+    author: '운영자',
     createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2일 전
     likeCount: 122,
   },
