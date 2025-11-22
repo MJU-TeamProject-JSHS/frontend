@@ -12,8 +12,12 @@ import BoardListScreen from './src/screen/board/BoardListScreen';
 import BoardDetailScreen from './src/screen/board/BoardDetailScreen';
 import BoardWriteScreen from './src/screen/board/BoardWriteScreen';
 
+import ScrapListScreen from './src/screen/scrap/ScrapListScreen';
+
 import MyPageScreen from './src/screen/mypage/MyPageMainScreen';
 import PDFViewerScreen from './src/screen/common/PDFViewerScreen';
+import MyPostsScreen from './src/screen/mypage/MyPostsScreen';
+import MyPostDetail2 from './src/screen/mypage/MyPostDetail+';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +35,11 @@ export default function App() {
           <Stack.Screen name="ProblemMake" component={ProblemMakeScreen} />
           <Stack.Screen name="ProblemLoading" component={ProblemLoading} />
           <Stack.Screen name="ProblemResult" component={ProblemResultScreen} />
+          <Stack.Screen name="MyPosts" component={MyPostsScreen} />
+          <Stack.Screen name="MyPostDetail+" component={MyPostDetail2} />
+          <Stack.Screen name="ScrapList" component={ScrapListScreen} />
+          
+
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

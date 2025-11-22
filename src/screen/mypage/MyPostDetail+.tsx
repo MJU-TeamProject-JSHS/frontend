@@ -15,30 +15,29 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
 
-
 const FIXED_CREATED_AT = '2025.11.21 16:20';
 
 const LOCAL_FILES = [
   {
     module: require('../../../assets/demo/5-6주차 60242053 임서빈.pdf'),
-    name: '5-6주차 60242053 임서빈.pdf',
+    name: '4차산업혁명시대의 예술 중간 분할 pdf',
   },
 ];
 
 const COPY = {
-  title: '공학수학 5,6주차 과제 손풀이',
+  title: '4차산업혁명시대의 예술 중간 분할 pdf',
   author: '운영자',
-  body: `공학수학 5,6주차 과제 파일입니다. 틀린문제 포함입니다! 6장 난이도가 좀 있는 듯 합니다....\n\n 다들 시험 공부 화이팅!\n\n`,
+  body: `4차산업혁명시대의 예술 중간고사 분할 pdf입니다. 수업시간에 말씀하신대로 4장의 그림과 표는 시험범위에서 제외된다고 하네요.
+  6장의 '예술과 기술의 융합' 부분을 강조하셨고 시험에 낸다고 하셨습니다. 시험 준비하실 때 참고하시기 바랍니다.`,
   attachHeader: '첨부 파일',
   hint: '이 게시글이 도움이 되셨나요?',
 };
 
-export default function BoardDetailScreen() {
+export default function MyPostDetail2() {
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
-  
-  
-  const [tab, setTab] = useState<TabKey>('board');
+
+  const [tab, setTab] = useState<TabKey>('my');
   const [liked, setLiked] = useState(false);
   const [scrapped, setScrapped] = useState(false);
 
