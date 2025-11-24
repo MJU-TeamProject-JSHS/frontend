@@ -14,6 +14,8 @@ import { Feather } from '@expo/vector-icons';
 import BottomTabBar, { TabKey } from '../../components/global/BottomTabBar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 
 type PostItem = {
   id: number;
@@ -432,6 +434,9 @@ export default function MyPageMainScreen() {
   const [versionOpen, setVersionOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
   const navigation = useNavigation<any>();
+  const insets = useSafeAreaInsets();
+  const TAB_BAR_HEIGHT = 80;
+
 
   const handlePostPress = (id: number) => {
   if (id === 2) {
@@ -497,11 +502,22 @@ export default function MyPageMainScreen() {
         onConfirm={() => setLogoutOpen(false)}
       />
 
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={[styles.content, { paddingTop: topInset + 24 }]}
+       <ScrollView
+        style={{
+          flex: 1,
+          marginBottom: TAB_BAR_HEIGHT + insets.bottom, 
+        }}
+        contentContainerStyle={[
+          styles.content,
+          {
+            paddingTop: topInset + 24,
+            paddingBottom: 16,
+          },
+        ]}
         showsVerticalScrollIndicator={false}
       >
+
+
         <View style={styles.profileCardWrap}>
           <LinearGradient
             colors={['#615FFF', '#AD46FF', '#F6339A']}
@@ -602,7 +618,7 @@ const styles = StyleSheet.create({
   bg: { ...StyleSheet.absoluteFillObject },
   content: {
     paddingHorizontal: 20,
-    paddingBottom: 140,
+
     gap: 24,
   },
 

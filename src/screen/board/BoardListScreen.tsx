@@ -60,8 +60,12 @@ export default function BoardListScreen() {
   const [searchText, setSearchText] = useState('');
 
   const handlePostPress = (postId: number) => {
+  if (postId === 3) {
+    navigation.navigate('BoardDetail3', { postId });
+  } else {
     navigation.navigate('BoardDetail', { postId });
-  };
+  }
+};
 
   const handleSearchPress = () => {
     setSearchOpen(true);
