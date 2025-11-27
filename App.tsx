@@ -2,6 +2,7 @@ import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import SplashScreen from './src/screen/auth/SplashScreen';
 import LoginScreen from './src/screen/auth/LoginScreen';
@@ -22,8 +23,25 @@ import PDFViewerScreen from './src/screen/common/PDFViewerScreen';
 import MyPostsScreen from './src/screen/mypage/MyPostsScreen';
 import MyPostDetail2 from './src/screen/mypage/MyPostDetail+';
 
+import BottomTabBar from './src/components/global/BottomTabBar';
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+// 메인 탭 네비게이터 (AiHome, BoardList, ScrapList, MyPageMain)
+function MainTabs() {
+  return (
+    <Tab.Navigator
+      tabBar={(props) => <BottomTabBar {...props} />}
+      screenOptions={{ headerShown: false }}
+    >
+      <Tab.Screen name="AiHome" component={AiHomeScreen} />
+      <Tab.Screen name="BoardList" component={BoardListScreen} />
+      <Tab.Screen name="ScrapList" component={ScrapListScreen} />
+      <Tab.Screen name="MyPageMain" component={MyPageScreen} />
+    </Tab.Navigator>
+  );
+}
 
 export default function App() {
   return (
@@ -32,10 +50,11 @@ export default function App() {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
-
-          <Stack.Screen name="AiHome" component={AiHomeScreen} />
-          <Stack.Screen name="BoardList" component={BoardListScreen} />
-          <Stack.Screen name="MyPageMain" component={MyPageScreen} />
+          
+          {/* 메인 탭 네비게이터 */}
+          <Stack.Screen name="MainTabs" component={MainTabs} />
+          
+          {/* 나머지 화면들 */}
           <Stack.Screen name="BoardDetail" component={BoardDetailScreen} />
           <Stack.Screen name="BoardWrite" component={BoardWriteScreen} />
           <Stack.Screen name="PDFViewer" component={PDFViewerScreen} />
@@ -44,10 +63,7 @@ export default function App() {
           <Stack.Screen name="ProblemResult" component={ProblemResultScreen} />
           <Stack.Screen name="MyPosts" component={MyPostsScreen} />
           <Stack.Screen name="MyPostDetail+" component={MyPostDetail2} />
-          <Stack.Screen name="ScrapList" component={ScrapListScreen} />
           <Stack.Screen name="BoardDetail3" component={BoardDetail3Screen} />
-
-
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
