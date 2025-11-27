@@ -11,7 +11,7 @@ export default function LoginScreen() {
     // 1) 카카오 SDK login() 호출
     // 2) accessToken/idToken 받기
     // 3) api.post('/auth/kakao', { accessToken })
-    navigation.navigate('AiHome');
+    navigation.navigate('MainTabs');
     console.log('kakao login');
   };
 

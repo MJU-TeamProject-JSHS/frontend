@@ -1,7 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 
 import RobotFigmaIcon from '../../assets/svgs/RobotFigmaIcon';
 import ClipboardListMdIcon from '../../assets/svgs/ClipboardListMdIcon';
@@ -9,11 +9,6 @@ import FolderOpenMdIcon from '../../assets/svgs/FolderOpenMdIcon';
 import UserMdIcon from '../../assets/svgs/UserMdIcon';
 
 export type TabKey = 'ai' | 'board' | 'library' | 'my';
-
-type Props = {
-  selectedKey?: TabKey;
-  onChange?: (key: TabKey) => void;
-};
 
 // 탭 키와 화면 이름 매핑
 const TAB_TO_SCREEN: Record<TabKey, string> = {
@@ -23,23 +18,30 @@ const TAB_TO_SCREEN: Record<TabKey, string> = {
   my: 'MyPageMain',
 };
 
-export default function BottomTabBar({ selectedKey, onChange }: Props) {
-  const [internalKey, setInternalKey] = useState<TabKey>('ai');
-  const navigation = useNavigation<any>();
-  const route = useRoute();
+const SCREEN_TO_TAB: Record<string, TabKey> = {
+  'AiHome': 'ai',
+  'BoardList': 'board',
+  'ScrapList': 'library',
+  'MyPageMain': 'my',
+};
 
-  // 현재 화면 이름에 따라 activeKey 결정
-  const getActiveKeyFromRoute = (): TabKey | null => {
-    const routeName = route.name;
-    for (const [key, screenName] of Object.entries(TAB_TO_SCREEN)) {
-      if (screenName === routeName) {
-        return key as TabKey;
-      }
-    }
+export default function BottomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+  // state가 없거나 routes가 없으면 null 반환
+  if (!state || !state.routes || state.routes.length === 0) {
     return null;
-  };
+  }
 
-  const activeKey = selectedKey ?? getActiveKeyFromRoute() ?? internalKey;
+  const activeRoute = state.routes[state.index];
+  if (!activeRoute) {
+    return null;
+  }
+
+  const activeKey = SCREEN_TO_TAB[activeRoute.name] || 'ai';
+  
+  // 탭 화면이 아니면 바텀 탭 숨기기 (스택 내부 화면)
+  if (!SCREEN_TO_TAB[activeRoute.name]) {
+    return null;
+  }
 
   // 탭 바 아이콘과 라벨 추가
   const tabs = useMemo(
@@ -53,17 +55,19 @@ export default function BottomTabBar({ selectedKey, onChange }: Props) {
   );
 
   const handlePress = (key: TabKey) => {
-    // onChange가 있으면 호출 (상태 관리용)
-    if (onChange) {
-      onChange(key);
-    } else {
-      setInternalKey(key);
-    }
-
-    // 네비게이션 처리
     const screenName = TAB_TO_SCREEN[key];
-    if (screenName && route.name !== screenName) {
-      navigation.navigate(screenName as never);
+    const route = state.routes.find(r => r.name === screenName);
+    
+    if (route) {
+      const event = navigation.emit({
+        type: 'tabPress',
+        target: route.key,
+        canPreventDefault: true,
+      });
+
+      if (!event.defaultPrevented) {
+        navigation.navigate(route.name, route.params);
+      }
     }
   };
 
