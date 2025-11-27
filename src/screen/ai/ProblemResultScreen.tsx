@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import DDingLogo from '../../components/global/DDingLogo';
 import SparklesIcon from '../../assets/svgs/SparklesIcon';
 import ChevronLeftIcon from '../../assets/svgs/ChevronLeftIcon';
+import XIcon from '../../assets/svgs/XIcon';
 import { useNavigation } from '@react-navigation/native';
 import MultipleChoiceProblemCard from '../../components/ai/MultipleChoiceProblemCard';
 import MemorizedNotes from '../../components/ai/MemorizedNotes';
@@ -440,14 +441,17 @@ export default function ProblemResultScreen({ route }: { route: { params?: Route
                 end={{ x: 1, y: 1 }}
                 style={StyleSheet.absoluteFillObject as any}
             />
-            {/* 상단바: 뒤로가기 + DDING 로고 (flex) */}
+            {/* 상단바: 뒤로가기 + DDING 로고 + X 버튼 (flex) */}
             <View style={styles.header}>
                 <Pressable onPress={() => navigation.navigate('ProblemMake')} style={styles.backHit}>
                     <ChevronLeftIcon size={24} color="#111827" />
                 </Pressable>
-                <View style={{ marginTop: 6 }}>
+                <View style={styles.logoContainer}>
                     <DDingLogo />
                 </View>
+                <Pressable onPress={() => navigation.navigate('AiHome')} style={styles.closeHit}>
+                    <XIcon size={24} color="#111827" />
+                </Pressable>
             </View>
             {/* 스크롤 가능한 콘텐츠 영역 */}
             <ScrollView 
@@ -505,6 +509,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    logoContainer: {
+        flex: 1,
+        alignItems: 'center',
+        marginTop: 6,
     },
     container: {
         paddingHorizontal: 20,
@@ -547,6 +557,13 @@ const styles = StyleSheet.create({
         color: 'rgba(255,255,255,0.9)',
     },
     backHit: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    closeHit: {
         width: 36,
         height: 36,
         borderRadius: 18,
