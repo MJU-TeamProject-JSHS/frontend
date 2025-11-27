@@ -3,13 +3,15 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
-
+import { useNavigation } from '@react-navigation/native';
 export default function LoginScreen() {
+  const navigation = useNavigation<any>();
   const onKakaoPress = async () => {
     // TODO(backend): 카카오 로그인 성공 후 토큰을 백엔드로 전달
     // 1) 카카오 SDK login() 호출
     // 2) accessToken/idToken 받기
     // 3) api.post('/auth/kakao', { accessToken })
+    navigation.navigate('AiHome');
     console.log('kakao login');
   };
 
