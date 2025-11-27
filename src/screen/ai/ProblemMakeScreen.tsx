@@ -32,7 +32,7 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
     }
   };
   const type = setType(title);
-  const DUMMY_UPLOAD_URL = `https://cd00fddab46b.ngrok-free.app/api/genai/questions?type=${type}`;
+  const DUMMY_UPLOAD_URL = `https://37fe6f1c3c6d.ngrok-free.app/api/genai/questions?type=${type}`;
 
   
 
@@ -115,6 +115,7 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
     if (files.length === 0 || isUploading) return;
     try {
       setIsUploading(true);
+      
       // 업로드 진행 화면으로 이동
       navigation.navigate('ProblemLoading', { title });
       
@@ -140,7 +141,7 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
           type: mimeType,
         } as any);
       }
-
+      
       const res = await fetch(DUMMY_UPLOAD_URL, {
         method: 'POST',
         body: formData,
@@ -148,17 +149,49 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
 
       if (!res.ok) {
         const errorText = await res.text();
-        console.log('Server error:', errorText);
-        throw new Error('Upload failed');
+        throw new Error(`Upload failed: ${res.status} ${res.statusText}`);
       }
       
       const data = await res.json();
-      console.log('SUCCESS:', data);
-      console.log('업로드 완료', '파일이 서버로 전송되었습니다.');
+      
+      // 백엔드 응답 데이터를 ProblemLoading으로 전달
+      // 백엔드 응답 형식에 맞게 데이터 변환
+      let problems: any[] = [];
+      
+      if (Array.isArray(data)) {
+        // 응답이 배열인 경우
+        problems = data;
+      } else if (data.problems && Array.isArray(data.problems)) {
+        // 응답이 { problems: [...] } 형식인 경우
+        problems = data.problems;
+      } else if (data.questions && Array.isArray(data.questions)) {
+        // 응답이 { questions: [...] } 형식인 경우
+        problems = data.questions;
+      } else if (data.data && Array.isArray(data.data)) {
+        // 응답이 { data: [...] } 형식인 경우
+        problems = data.data;
+      } else {
+        // 응답 형식을 알 수 없는 경우
+        // 단일 객체인 경우 배열로 감싸기
+        if (data && typeof data === 'object' && data.type) {
+          problems = [data];
+        }
+      }
+      
+      // 응답 데이터를 ProblemLoading으로 전달 (ProblemLoading에서 ProblemResult로 이동)
+      navigation.navigate('ProblemLoading', { 
+        title,
+        problems: problems,
+        rawResponse: data // 원본 응답도 함께 전달
+      });
+      
       setFiles([]);
     } catch (e) {
-      console.error('Network error:', e);
-      console.log('업로드 실패', '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      // 에러 발생 시 ProblemLoading에서 처리하도록 에러 정보 전달
+      navigation.navigate('ProblemLoading', { 
+        title,
+        error: '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+      });
     } finally {
       setIsUploading(false);
     }
