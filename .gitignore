@@ -23,6 +23,7 @@ temp/
 # -------------------------------------------------------------
 /ios
 /android
+android/local.properties
 .kotlin/
 Pods/
 *.orig.*

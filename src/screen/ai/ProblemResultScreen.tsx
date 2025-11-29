@@ -443,13 +443,13 @@ export default function ProblemResultScreen({ route }: { route: { params?: Route
             />
             {/* 상단바: 뒤로가기 + DDING 로고 + X 버튼 (flex) */}
             <View style={styles.header}>
-                <Pressable onPress={() => navigation.navigate('ProblemMake')} style={styles.backHit}>
+                <Pressable onPress={() => navigation.goBack()} style={styles.backHit}>
                     <ChevronLeftIcon size={24} color="#111827" />
                 </Pressable>
                 <View style={styles.logoContainer}>
                     <DDingLogo />
                 </View>
-                <Pressable onPress={() => navigation.navigate('AiHome')} style={styles.closeHit}>
+                <Pressable onPress={() => navigation.navigate('MainTabs')} style={styles.closeHit}>
                     <XIcon size={24} color="#111827" />
                 </Pressable>
             </View>

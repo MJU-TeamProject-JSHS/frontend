@@ -208,7 +208,7 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
       />
       {/* 상단바: 뒤로가기 + DDING 로고 (flex) */}
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.navigate('AiHome')} style={styles.backHit}>
+        <Pressable onPress={() => navigation.goBack()} style={styles.backHit}>
           <ChevronLeftIcon size={24} color="#111827" />
         </Pressable>
         <View style={{ marginTop: 6 }}>
