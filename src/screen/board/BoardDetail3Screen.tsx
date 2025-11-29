@@ -40,6 +40,31 @@ const COPY = {
   hint: '이 게시글이 도움이 되셨나요?',
 };
 
+function CitationSection({ onPress }: { onPress: () => void }) {
+  return (
+    <View style={styles.citationWrap}>
+      <Text style={styles.citationHeading}>인용한 게시글</Text>
+
+      <TouchableOpacity
+        activeOpacity={0.85}
+        style={styles.citationButton}
+        onPress={onPress}
+      >
+        <View style={styles.citationLeft}>
+          <View style={styles.citationIconCircle}>
+            <Feather name="book" size={20} color="#fff" />
+          </View>
+
+          <Text style={styles.citationTitle}>웹프 과제 조건 공지</Text>
+        </View>
+
+        <Feather name="chevron-right" size={20} color="#4A5565" />
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+
 export default function BoardDetail3Screen() {
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
@@ -49,7 +74,7 @@ export default function BoardDetail3Screen() {
   const [liked, setLiked] = useState(false);
   const [scrapped, setScrapped] = useState(false);
 
-  const likeCount = liked ? 123 : 122;
+  const likeCount = liked ? 46 : 45;
 
   return (
     <LinearGradient
@@ -154,6 +179,10 @@ export default function BoardDetail3Screen() {
           ))}
         </View>
 
+          <CitationSection
+          onPress={() => navigation.navigate('BoardDetail', { postId: 999 })}
+        />
+
         <View style={styles.actionsWrap}>
           <Text style={styles.actionsHint}>{COPY.hint}</Text>
 
@@ -183,7 +212,7 @@ export default function BoardDetail3Screen() {
         </View>
       </ScrollView>
 
-      <BottomTabBar selectedKey={tab} onChange={setTab} />
+      
     </LinearGradient>
   );
 }
@@ -398,4 +427,44 @@ const styles = StyleSheet.create({
   likeTextActive: {
     color: '#FB2C36',
   },
+    citationWrap: {
+    width: '100%',
+    marginTop: 20,
+    gap: 12,
+  },
+  citationHeading: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#364153',
+  },
+  citationButton: {
+    height: 73,
+    borderRadius: 18,
+    backgroundColor: '#E0F2FE',
+    borderWidth: 0.6,
+    borderColor: '#BFDBFE',
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  citationLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  citationIconCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 14,
+    backgroundColor: '#60A5FA',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  citationTitle: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#1E2939',
+  },
+
 });
