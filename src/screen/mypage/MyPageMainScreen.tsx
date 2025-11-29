@@ -17,6 +17,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
+
 type PostItem = {
   id: number;
   title: string;
@@ -435,6 +436,7 @@ export default function MyPageMainScreen() {
   const [logoutOpen, setLogoutOpen] = useState(false);
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
+  
   const TAB_BAR_HEIGHT = 80;
 
 
@@ -481,7 +483,10 @@ export default function MyPageMainScreen() {
     []
   );
 
-  const topInset = Platform.OS === 'android' ? StatusBar.currentHeight ?? 0 : 0;
+  const topInset = Platform.OS === 'android'
+        ? (StatusBar.currentHeight ?? 0)
+        : insets.top + 12;  
+
 
   return (
     <View style={styles.root}>
@@ -608,7 +613,7 @@ export default function MyPageMainScreen() {
         </View>
       </ScrollView>
 
-      <BottomTabBar selectedKey={tab} onChange={(k) => setTab(k)} />
+      
     </View>
   );
 }
