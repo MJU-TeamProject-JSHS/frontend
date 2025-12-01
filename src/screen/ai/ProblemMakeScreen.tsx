@@ -32,7 +32,7 @@ export default function ProblemMakeScreen({ route }: { route: { params?: RoutePa
     }
   };
   const type = setType(title);
-  const DUMMY_UPLOAD_URL = `https://37fe6f1c3c6d.ngrok-free.app/api/genai/questions?type=${type}`;
+  const DUMMY_UPLOAD_URL = `https://8091135ea406.ngrok-free.app/api/genai/questions?type=${type}`;
 
   
 
