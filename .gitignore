@@ -22,9 +22,17 @@ temp/
 # If you add native code later, remove the platform you need.
 # -------------------------------------------------------------
 /ios
-/android
+# /android
+
+# Android specific ignores
 android/local.properties
-.kotlin/
+android/build/
+android/.gradle/
+android/app/build/
+android/.idea
+android/app/.cxx/
+android/.kotlin/
+
 Pods/
 *.orig.*
 *.jks
